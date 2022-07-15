@@ -66,3 +66,13 @@ void Matrix::print()
 		std::cout << "matrix Null" << std::endl;
 	}
 }
+
+unsigned int Matrix::getRowNum(void)
+{
+	return _rows;
+}
+
+unsigned int Matrix::getColNum(void)
+{
+	return _cols;
+}
