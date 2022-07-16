@@ -1,9 +1,15 @@
 #include <iostream>
+#include <math.h>
 
 #include "matrix.hpp" 
 #include "myutils.hpp"
 #include "neuralnetwork.hpp"
 
+
+double sigmoid_function(double x)
+{
+    return 1 / (1 + exp(-x));
+}
 
 void test_matrix(void)
 {
@@ -32,14 +38,43 @@ void test_network(void)
 	{
 		std::cout << "net init failed" <<std::endl;
 	}
-		
+}
 
+void test_matrix_dot(void)
+{
+	Matrix A(2,3);
+	double a[6] = {1,2,3,4,5,6};
+	A.setArray(a);
+	A.print();
+	A.transPose()->print();
+
+	Matrix B(3,4);
+	double b[12] = {1,2,3,4,4,2,1,3,4,5,1,2};
+	B.setArray(b);
+	B.print();
+	B.transPose()->print();
+
+	Matrix C(2,4);
+
+	matrix_dot(&C, &A, &B);
+	C.print();
+
+	matrix_map(&C, &C, sigmoid_function);
+	C.print();
+}
+
+void test_sigmoid_func(void)
+{
+	double x = 16;
+	printf("sigmoid(%f) = %.16f\n", x, sigmoid_function(x));
 }
 
 int main(void)
 {
 	//test_matrix();
-	test_network();
+	//test_network();
+	test_matrix_dot();
+//	test_sigmoid_func();
 
 	return 0;
 }
