@@ -15,9 +15,11 @@ public:
 	/*使用 函数f 对矩阵进行初始化 */
 	void random_init(random_func_t f);
 	void setArray(double * arr); // use for test
-	unsigned int getRowNum(void);
-	unsigned int getColNum(void);
-	Matrix * transPose(void);
+	const double * getArray(void) const;
+	double * getMutableArray(void);
+	unsigned int getRowNum(void) const;
+	unsigned int getColNum(void) const;
+	Matrix * transPose(void) const; /*new 出矩阵返回，注意释放内存*/
 
 	void print();
 

@@ -11,3 +11,5 @@ target_include_directories(hnr PUBLIC ${PROJECT_SOURCE_DIR}/include)
 add_executable(test src/test/test.cpp)
 target_link_libraries(test PRIVATE hnr)
 
+add_executable(main src/main.cpp)
+target_link_libraries(main PRIVATE hnr)

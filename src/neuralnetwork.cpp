@@ -255,9 +255,11 @@ int Network::_update_weights()
 		
 		if (0 != matrix_add(currentW, currentW, deltaW))
 		{
+			delete deltaW;
 			std::cout << "matrix_add faild" << std::endl;
 			return 1;
 		}
+		delete deltaW;
 	}
 
 	return 0;

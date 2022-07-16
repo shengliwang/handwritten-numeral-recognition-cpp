@@ -17,6 +17,7 @@ nl ==> next_layer
 cl_input: 当前层的信号输入
 cl_output:   当前层的信号输出
 cl_error: 当前层的error
+rows, cols 用来制定返回矩阵的规模
 */
 typedef Matrix * (* update_weight_func_t)(
 double lr, unsigned int rows, unsigned int cols,

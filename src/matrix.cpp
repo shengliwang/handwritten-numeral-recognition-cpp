@@ -76,12 +76,12 @@ void Matrix::print()
 	}
 }
 
-unsigned int Matrix::getRowNum(void)
+unsigned int Matrix::getRowNum(void) const
 {
 	return _rows;
 }
 
-unsigned int Matrix::getColNum(void)
+unsigned int Matrix::getColNum(void) const
 {
 	return _cols;
 }
@@ -196,7 +196,7 @@ int matrix_add(Matrix * dst, const Matrix * A, const Matrix * B)
 	return 0;
 }
 
-Matrix * Matrix::transPose(void)
+Matrix * Matrix::transPose(void) const
 {
 	Matrix * dst = new Matrix(this->_cols, this->_rows);
 
@@ -215,4 +215,14 @@ Matrix * Matrix::transPose(void)
 	}
 
 	return dst;
+}
+
+const double * Matrix::getArray(void) const
+{
+	return _array;
+}
+
+double * Matrix::getMutableArray(void)
+{
+	return _array;
 }
