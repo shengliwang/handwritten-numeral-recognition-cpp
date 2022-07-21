@@ -31,8 +31,8 @@ Matrix::Matrix(int row_num, int col_num)
 
 Matrix::~Matrix()
 {
-	std::cout << "~Matrix called" << std::endl;
-	print();
+//	std::cout << "~Matrix called" << std::endl;
+//	print();
 	if (NULL != _array)
 	{
 		free(_array);
@@ -50,7 +50,7 @@ void Matrix::random_init(random_func_t f)
 	}
 }
 
-void Matrix::print()
+void Matrix::dump(void) const
 {
 	if (NULL != _array)
 	{
@@ -145,7 +145,11 @@ int matrix_map(Matrix * dst, const Matrix * src, map_func_t func)
 
 void Matrix::setArray(double * arr)
 {
-	memcpy(_array, arr, sizeof(double)*_total_size);
+	for (int i = 0; i < _total_size; ++i)
+	{
+		_array[i] = arr[i];
+	}
+	//memcpy(_array, arr, sizeof(double)*_total_size);
 }
 
 int matrix_sub(Matrix * dst, const Matrix * A, const Matrix * B)

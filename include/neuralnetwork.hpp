@@ -32,13 +32,19 @@ public:
 	~Network();
 	
 	void setLearningRate(double lr); /* 设置学习率 */
+	void setActivationFunc(activation_func_t f);
+	void setGenDeltaWeightFunc(update_weight_func_t);
 	void printConfig(bool verbose); /*打印配置*/
 	int trainOneStep(double * train_data, unsigned int data_num, 
 						double * target_data, unsigned int target_num); /*根据输入与目标值，进行一次正向传播与反向传播*/
-	int query();	/*查询*/
+	int query(double * input_data, double *result);	/*查询*/
+
 	bool ok(void);	/*判断神经网络是否初始化成功*/
 	void setLr(double lr) {_lr = lr;}  /* 设置学习率 */
 
+	void printDebugInfo(void); /*调试时用，用于打印神经网络中的内部各种矩阵的数据*/
+	
+	Matrix * getWeight(int prelayerid, int nextlayerid); // for debug
 private://类内使用函数
 	Matrix * _getWeight(int prelayerid,int nextlayerid); /* 获取权重矩阵，类内使用*/
 	Matrix * _getLayerInputSignal(int layerid); /* 获取layerid层的信号输入*/

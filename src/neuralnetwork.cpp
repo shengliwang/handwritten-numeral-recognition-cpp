@@ -1,4 +1,6 @@
 #include <iostream>
+#include <string.h>
+
 
 #include "matrix.hpp"
 #include "neuralnetwork.hpp"
@@ -15,6 +17,9 @@ Network::Network(unsigned int layer_num, unsigned int * layer_node_num)
 		return ;
 	}
 
+	_activation_func = NULL;
+	_genDeltaWeight_func = NULL;
+
 	if (NULL == layer_node_num) {std::cout << "layer node num is null" << std::endl; return;}
 
 
@@ -26,7 +31,7 @@ Network::Network(unsigned int layer_num, unsigned int * layer_node_num)
 		/* 权重矩阵形状，比如前一层节点数为5,后一层节点数为3,则权重矩阵的形状为3x5*/
 		_weights[i] = new Matrix(layer_node_num[i+1], layer_node_num[i]);
 		if (NULL == _weights[i]){return;}
-		_weights[i]->random_init(myrand_double);
+		_weights[i]->random_init(myrand_double); /*使用-0.5~0.5之间的随机数*/
 	}
 
 	/* 申请每层的输入输出信号(一维矩阵) */
@@ -91,13 +96,15 @@ void Network::printConfig(bool verbose)
 	{
 		std::cout << "nodes num of layer" << i << ": " << _getLayerNodeNum(i) << std::endl;;
 	}
+	printf("activation function: %p\n", _activation_func);
+	printf("update weight function: %p\n", _genDeltaWeight_func);
 
 	if (verbose)
 	{
 		for (int i = 0; i < _layer_num -1 ; ++i)
 		{
 			std::cout << "weigts matrix " << i << " : " << std::endl;
-			_weights[i]->print();
+			_weights[i]->dump();
 		}
 	}
 
@@ -131,6 +138,36 @@ int Network::trainOneStep(double * train_data, unsigned int data_num,
 		return 1;
 	}
 
+	return 0;
+}
+
+int Network::query(double * input_data, double *result)
+{
+	if ( 0 != _forward_propagation(input_data, _getLayerNodeNum(0)))
+	{
+		std::cout << "query failed" <<std::endl;
+		return 1;
+	}
+
+	Matrix * output = _getLayerOutputSignal(_layer_num - 1);
+	#if 0
+	std::cout << __FUNCTION__ <<  ": " << std::endl;
+	output->dump();
+
+	for (int i = 0; i < output->getRowNum(); ++i)
+	{
+		printf("[%d]: %f ", i, output->getArray()[i]);
+	}
+	printf("\n");
+	#endif
+
+	for (int i = 0; i < output->getRowNum(); ++i)
+	{
+		result[i] = output->getArray()[i];
+	}
+
+
+	//memcpy(result, output->getArray(), sizeof(output->getRowNum()*sizeof(double)));
 	return 0;
 }
 
@@ -173,6 +210,8 @@ int Network::_forward_propagation(double * train_data, unsigned int data_num)
 
 		/* 下一层的输入信号在激活函数的作用下生成输出信号*/
 		matrix_map(_getLayerOutputSignal(i+1), _getLayerInputSignal(i+1), _activation_func);
+		//std::cout << "in function propagation " << i + 1 << "matrix: " << std::endl;
+		//_getLayerOutputSignal(i+1)->dump();
 	}
 
 	return 0;
@@ -247,6 +286,9 @@ int Network::_update_weights()
 								cl_input, cl_output, cl_error,
 								nl_input, nl_output, nl_error);
 		
+		//std::cout << "layerid = " << layerid << ". deltaW:" << std::endl;
+		//deltaW->dump();
+
 		if (NULL == deltaW)
 		{
 			std::cout << "deltaW == NULL" << std::endl;
@@ -292,7 +334,60 @@ Matrix *  Network::_getWeight(int prelayerid, int nextlayerid)
 	return _weights[prelayerid];
 }
 
+Matrix * Network::getWeight(int prelayerid, int nextlayerid)
+{
+	return _getWeight(prelayerid, nextlayerid);
+}
+
 Matrix * Network::_getLayerError(int layerid)
 {
 	return _layer_errors[layerid];
+}
+void Network::setActivationFunc(activation_func_t f)
+{
+	_activation_func = f;
+}
+void Network::setGenDeltaWeightFunc(update_weight_func_t f)
+{
+	_genDeltaWeight_func = f;
+}
+
+void Network::setLearningRate(double lr)
+{
+	_lr = lr;
+}
+
+void Network::printDebugInfo(void)
+{
+	std::cout << "=================== network info ======================" << std::endl;
+	std::cout << "learning rate = " << _lr << std::endl;
+	std::cout << "<---weight matrix info:--->" << std::endl;
+	for (int i = 0; i < _layer_num - 1; ++i)
+	{
+		std::cout << "weight matrix " << i <<  " : " << std::endl;
+		_getWeight(i, i+1)->dump();
+	}
+	std::cout << "<------------------------->" << std::endl;
+
+	std::cout << "<---signal input output info:--->" << std::endl;
+	for (int i = 0; i < _layer_num; ++i) 
+	{
+		std::cout << "layer " << i << " input signal:" << std::endl;
+		_getLayerInputSignal(i)->dump();
+		std::cout << "layer " << i << " output signal:" << std::endl;
+		_getLayerOutputSignal(i)->dump();
+	}
+	std::cout << "<------------------------->" << std::endl;
+
+	std::cout << "<--- layer error --->" << std::endl;
+	
+	for (int layerid = 1; layerid < _layer_num; ++layerid)
+	{
+		std::cout << "layer " << layerid << " error:" << std::endl;
+		_getLayerError(layerid)->dump();
+	}
+
+	std::cout << "<------------------------->" << std::endl;
+
+	std::cout << "=======================================================" << std::endl;
 }

@@ -21,7 +21,7 @@ public:
 	unsigned int getColNum(void) const;
 	Matrix * transPose(void) const; /*new 出矩阵返回，注意释放内存*/
 
-	void print();
+	void dump(void) const;
 
 	friend int matrix_dot(Matrix * dst, const Matrix * A, const Matrix * B); // dst = A * B 点乘
 	friend int matrix_map(Matrix * dst, const Matrix * src, map_func_t func); // src--> map --> dst
