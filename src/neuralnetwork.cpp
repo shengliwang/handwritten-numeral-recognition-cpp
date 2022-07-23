@@ -150,24 +150,12 @@ int Network::query(double * input_data, double *result)
 	}
 
 	Matrix * output = _getLayerOutputSignal(_layer_num - 1);
-	#if 0
-	std::cout << __FUNCTION__ <<  ": " << std::endl;
-	output->dump();
-
-	for (int i = 0; i < output->getRowNum(); ++i)
-	{
-		printf("[%d]: %f ", i, output->getArray()[i]);
-	}
-	printf("\n");
-	#endif
 
 	for (int i = 0; i < output->getRowNum(); ++i)
 	{
 		result[i] = output->getArray()[i];
 	}
 
-
-	//memcpy(result, output->getArray(), sizeof(output->getRowNum()*sizeof(double)));
 	return 0;
 }
 
@@ -286,8 +274,6 @@ int Network::_update_weights()
 								cl_input, cl_output, cl_error,
 								nl_input, nl_output, nl_error);
 		
-		//std::cout << "layerid = " << layerid << ". deltaW:" << std::endl;
-		//deltaW->dump();
 
 		if (NULL == deltaW)
 		{

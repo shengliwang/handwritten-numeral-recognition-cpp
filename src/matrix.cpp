@@ -2,6 +2,9 @@
 #include <stdio.h>
 #include <iostream>
 #include <string.h>
+#ifdef USINGOPENMP
+#include <omp.h>
+#endif
 
 
 #include "matrix.hpp"
@@ -103,7 +106,16 @@ int matrix_dot(Matrix * dst, const Matrix * src1, const Matrix * src2)
 		return 1;
 	}
 
+	#ifdef USINGOPENMP
+	#pragma omp parallel 
+	{
+	int tid = omp_get_thread_num();
+    int thread_num = omp_get_num_threads();
+	
+	for (int row = tid; row < dst->_rows; row += thread_num)
+	#else
 	for (int row = 0; row < dst->_rows; ++row)
+	#endif
 	{
 		for (int col = 0; col < dst->_cols; ++col)
 		{
@@ -116,6 +128,10 @@ int matrix_dot(Matrix * dst, const Matrix * src1, const Matrix * src2)
 			dst->_array[row * dst->_cols + col] = tmp;
 		}
 	}
+	#ifdef USINGOPENMP
+	}
+	#endif
+
 
 	return 0;
 }
@@ -133,10 +149,22 @@ int matrix_map(Matrix * dst, const Matrix * src, map_func_t func)
 		return 1;
 	}
 
+	#ifdef USINGOPENMP
+	#pragma omp parallel
+	{
+	int tid = omp_get_thread_num();
+    int thread_num = omp_get_num_threads();
+	
+	for (int i = tid; i < src->_total_size; i += thread_num)
+	#else
 	for (int i = 0; i < src->_total_size; ++i)
+	#endif
 	{
 		dst->_array[i] = func(src->_array[i]);
 	}
+	#ifdef USINGOPENMP
+	}
+	#endif
 
 
 	return 0;
@@ -167,11 +195,22 @@ int matrix_sub(Matrix * dst, const Matrix * A, const Matrix * B)
 	}
 
 
-
+	#ifdef USINGOPENMP
+	#pragma omp parallel
+	{
+	int tid = omp_get_thread_num();
+    int thread_num = omp_get_num_threads();
+	
+	for (int i = tid; i < dst->_total_size; i += thread_num)
+	#else
 	for (int i = 0; i < dst->_total_size; ++i)
+	#endif
 	{
 		dst->_array[i] = A->_array[i] - B->_array[i];
 	}
+	#ifdef USINGOPENMP
+	}
+	#endif
 	
 	return 0;
 }
@@ -191,11 +230,22 @@ int matrix_add(Matrix * dst, const Matrix * A, const Matrix * B)
 	}
 
 
-
+	#ifdef USINGOPENMP
+	#pragma omp parallel
+	{
+	int tid = omp_get_thread_num();
+    int thread_num = omp_get_num_threads();
+	
+	for (int i = tid; i < dst->_total_size; i += thread_num)
+	#else
 	for (int i = 0; i < dst->_total_size; ++i)
+	#endif
 	{
 		dst->_array[i] = A->_array[i] + B->_array[i];
 	}
+	#ifdef USINGOPENMP
+	}
+	#endif
 	
 	return 0;
 }
@@ -210,13 +260,25 @@ Matrix * Matrix::transPose(void) const
 		return NULL;
 	}
 
+	#ifdef USINGOPENMP
+	#pragma omp parallel
+	{
+	int tid = omp_get_thread_num();
+    int thread_num = omp_get_num_threads();
+	
+	for (int row = tid; row < dst->_rows; row += thread_num)
+	#else
 	for (int row = 0; row < dst->_rows; ++row)
+	#endif
 	{
 		for (int col = 0; col < dst->_cols; ++col)
 		{
 			dst->_array[row*dst->_cols + col] = this->_array[col*this->_cols + row];
 		}
 	}
+	#ifdef USINGOPENMP
+	}
+	#endif
 
 	return dst;
 }

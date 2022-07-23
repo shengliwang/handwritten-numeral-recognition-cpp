@@ -1,6 +1,24 @@
-cmake_minimum_required(VERSION 2.9)
+cmake_minimum_required(VERSION 3.5)
 
+#set(CMAKE_C_COMPILER clang)
+#set(CMAKE_CXX_COMPILER clang++)
 project(handwritten-numeral-recognition)
+
+
+set(PATH_TO_OPENMP_INSTALL "/usr")
+
+list(APPEND CMAKE_MODULE_PATH "${PATH_TO_OPENMP_INSTALL}/lib/cmake/openmp")
+
+message(STATUS "CMAKE_MODULE_PAHT=${CMAKE_MODULE_PATH}")
+if(USINGOPENMP)
+	find_package(OpenMPTarget)
+	if(OPENMP_FOUND)
+		message(STATUS "open mp found")
+		set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DUSINGOPENMP ${OpenMP_C_FLAGS}")
+		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DUSINGOPENMP ${OpenMP_CXX_FLAGS}")
+		set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${OpenMP_EXE_LINKER_FLAGS}")
+	endif()
+endif()
 
 
 set(CMAKE_BUILD_TYPE Debug)

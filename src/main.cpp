@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <sys/time.h>
 #include <time.h>
 #include <iostream>
 #include <math.h>
@@ -42,9 +43,13 @@ char single_line[1024*1024];
 
 int main(int argc, char * argv[])
 {
-	clock_t begin = clock();
+	struct timeval t1,t2;
+    double timeuse;
+    gettimeofday(&t1,NULL);
+
+
 	int layer_num = 3;
-	unsigned int layer_node_num[] = {784, 600, 10}; /*输入层 784个节点，隐藏层，200个，输出层10个节点*/
+	unsigned int layer_node_num[] = {784, 200, 10}; /*输入层 784个节点，隐藏层，200个，输出层10个节点*/
 	double lr = 0.02; /*学习率*/
 
 	Network net(layer_num, layer_node_num);
@@ -66,15 +71,15 @@ int main(int argc, char * argv[])
 	}
 
 	/*准备训练集和测试集*/
-    FILE * train_fp = fopen("../mnist_dataset/mnist_train_100.csv", "r");
-   // FILE * train_fp = fopen("../mnist_dataset/mnist_train.csv", "r");
+    //FILE * train_fp = fopen("../mnist_dataset/mnist_train_100.csv", "r");
+    FILE * train_fp = fopen("../mnist_dataset/mnist_train.csv", "r");
     if (NULL == train_fp)
     {
         fprintf(stderr, "open failed\n");
         return 1;
     }
-    FILE * test_fp = fopen("../mnist_dataset/mnist_test_10.csv", "r");
-    //FILE * test_fp = fopen("../mnist_dataset/mnist_test.csv", "r");
+    //FILE * test_fp = fopen("../mnist_dataset/mnist_test_10.csv", "r");
+    FILE * test_fp = fopen("../mnist_dataset/mnist_test.csv", "r");
     if (NULL == test_fp)
     {
         fclose(train_fp);
@@ -195,9 +200,10 @@ int main(int argc, char * argv[])
 
     }
 
-    clock_t end = clock();
-	double time_consumption = (double)(end - begin) / CLOCKS_PER_SEC;
-    printf("total=%d, right=%d [%f%%]. Using %f s\n", total, right_count, right_count*1.0/total*100, time_consumption);
+    gettimeofday(&t2,NULL);
+    timeuse = (t2.tv_sec - t1.tv_sec) + (double)(t2.tv_usec - t1.tv_usec)/1000000.0;
+
+    printf("total=%d, right=%d [%f%%]. Using %f s\n", total, right_count, right_count*1.0/total*100, timeuse);
 
 
 	
