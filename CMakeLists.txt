@@ -1,9 +1,6 @@
 cmake_minimum_required(VERSION 3.5)
 
-#set(CMAKE_C_COMPILER clang)
-#set(CMAKE_CXX_COMPILER clang++)
 project(handwritten-numeral-recognition)
-
 
 set(PATH_TO_OPENMP_INSTALL "/usr")
 
@@ -26,8 +23,8 @@ set(CMAKE_BUILD_TYPE Debug)
 add_library(hnr STATIC src/matrix.cpp src/myutils.cpp src/neuralnetwork.cpp)
 target_include_directories(hnr PUBLIC ${PROJECT_SOURCE_DIR}/include)
 
-add_executable(test src/test/test.cpp)
+add_executable(test examples/test.cpp)
 target_link_libraries(test PRIVATE hnr)
 
-add_executable(main src/main.cpp)
-target_link_libraries(main PRIVATE hnr)
+add_executable(mnist_train examples/mnist_train.cpp)
+target_link_libraries(mnist_train PRIVATE hnr)

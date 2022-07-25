@@ -71,15 +71,15 @@ int main(int argc, char * argv[])
 	}
 
 	/*准备训练集和测试集*/
-    //FILE * train_fp = fopen("../mnist_dataset/mnist_train_100.csv", "r");
-    FILE * train_fp = fopen("../mnist_dataset/mnist_train.csv", "r");
+    //FILE * train_fp = fopen("../examples/mnist_dataset/mnist_train_100.csv", "r");
+    FILE * train_fp = fopen("../examples/mnist_dataset/mnist_train.csv", "r");
     if (NULL == train_fp)
     {
         fprintf(stderr, "open failed\n");
         return 1;
     }
-    //FILE * test_fp = fopen("../mnist_dataset/mnist_test_10.csv", "r");
-    FILE * test_fp = fopen("../mnist_dataset/mnist_test.csv", "r");
+    //FILE * test_fp = fopen("../examples/mnist_dataset/mnist_test_10.csv", "r");
+    FILE * test_fp = fopen("../examples/mnist_dataset/mnist_test.csv", "r");
     if (NULL == test_fp)
     {
         fclose(train_fp);
