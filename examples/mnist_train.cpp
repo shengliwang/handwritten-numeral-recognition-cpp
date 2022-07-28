@@ -50,7 +50,7 @@ int main(int argc, char * argv[])
 
 	int layer_num = 3;
 	unsigned int layer_node_num[] = {784, 200, 10}; /*输入层 784个节点，隐藏层，200个，输出层10个节点*/
-	double lr = 0.02; /*学习率*/
+	double lr = 0.1; /*学习率*/
 
 	Network net(layer_num, layer_node_num);
 	net.setLearningRate(lr);

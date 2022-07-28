@@ -2,19 +2,9 @@
 
 ## 说明
 本代码使用c++实现神经网络的一个简单应用，不借助任何框架。目的是加深对神经网络工作流程的理解。目前提供使用mnist手写数据集的识别，识别准确率大概在95%左右。   
+代码实现, 参考书籍 <https://github.com/jash-git/Book-Python-Neural-Network>   
 代码结构如下：
 ```shell
-.
-├── CMakeLists.txt				
-├── examples
-│   ├── mnist_train.cpp			
-│   └── test.cpp				
-├── imgs
-├── include
-│   ├── matrix.hpp				
-│   ├── myutils.hpp				
-│   └── neuralnetwork.hpp		
-├── mnist_dataset				
 .
 ├── CMakeLists.txt				# 工程文件
 ├── examples
@@ -53,7 +43,7 @@ cd build/
 cmake ..		## 生成makefile
 make			## 使用makefile进行编译
 ./mnist_train	## 运行
-```
+```https://zhuanlan.zhihu.com/p/181669611
 
 ## 使用 openmp 加速矩阵运算
 ### archlinux 安装 openmp (并行计算库)
@@ -71,7 +61,8 @@ cmake .. -DUSINGOPENMP=yes
 make
 ./mnist_train
 ```
-使用 openmp 加速后，在我的电脑上，加速比：106s/39s=2.71(未加速用时106s，使用openmp加速用时39s)
+使用 openmp 加速后，在我的电脑上，加速比：106s/39s=2.71(未加速用时106s，使用openmp加速用时39s)    
+并行计算参考： <https://zhuanlan.zhihu.com/p/181669611>
 
 
 ## 其他
