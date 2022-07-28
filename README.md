@@ -43,7 +43,7 @@ cd build/
 cmake ..		## 生成makefile
 make			## 使用makefile进行编译
 ./mnist_train	## 运行
-```https://zhuanlan.zhihu.com/p/181669611
+```
 
 ## 使用 openmp 加速矩阵运算
 ### archlinux 安装 openmp (并行计算库)
